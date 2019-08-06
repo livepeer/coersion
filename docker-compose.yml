@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8080:8080
+    environment:
+       - API_URL=http://localhost:8088/swagger.json
+  coersion:
+    build: .
+    command: 'coersion'
+    ports:
+      - 8088:8088

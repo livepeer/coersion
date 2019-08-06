@@ -1,0 +1,90 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+        "version": "1.0.0",
+        "title": "Swagger Petstore",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "apiteam@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host": "localhost:8088",
+    "_basePath": "/v2",
+    "tags": [
+        {
+            "name": "ffmpeg",
+            "description": "demonstration of ffmpeg interaction",
+            "externalDocs": {
+                "description": "Using macroblocks from three separate transcode rendition jobs to determine content authenticity",
+                "url": "https://github.com/livepeer/research/issues/36"
+            }
+        }
+    ],
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "paths": {
+        "/scale": {
+            "get": {
+                "tags": [
+                    "ffmpeg"
+                ],
+                "summary": "extract still image and scale",
+                "description": "extract still image and scale",
+                "operationId": "extractScale",
+                "produces": [
+                    "image/jpeg"
+                ],
+                "parameters": [
+                    {
+                        "name": "s",
+                        "in": "query",
+                        "description": "Source video file to extract a still image from",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "w",
+                        "in": "query",
+                        "description": "Desired width of the extracted image",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "h",
+                        "in": "query",
+                        "description": "Desired height of the extracted image",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": "image/*",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request params"
+                    },
+                    "500": {
+                        "description": "Task error"
+                    }
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
