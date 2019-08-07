@@ -1,0 +1,9 @@
+# ignore .git and .cache folders
+.git
+.cache
+
+# ignore all markdown files
+*.md
+
+#ignore changes to the Dockerfile
+Dockerfile
