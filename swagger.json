@@ -1,12 +1,11 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
-        "version": "1.0.0",
-        "title": "Swagger Petstore",
-        "termsOfService": "http://swagger.io/terms/",
+        "description": "This is a proof-of-concept to describe the idea depicted in issue [livepeer/research/issues/36](https://github.com/livepeer/research/issues/36)",
+        "version": "0.0.0",
+        "title": "Content Authenticity Verification",
         "contact": {
-            "email": "apiteam@swagger.io"
+            "email": "michael@livepeer.org"
         },
         "license": {
             "name": "Apache 2.0",
@@ -26,8 +25,7 @@
         }
     ],
     "schemes": [
-        "https",
-        "http"
+        "http",
     ],
     "paths": {
         "/scale": {
