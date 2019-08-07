@@ -7,3 +7,4 @@
 
 #ignore changes to the Dockerfile
 Dockerfile
+docker-compose.yml
