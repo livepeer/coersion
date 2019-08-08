@@ -27,6 +27,7 @@ func NewScaleImageTask(source string, w, h uint) *ScaleImageTask {
 		source: source,
 		cmd: exec.Command(ffmpegCmd, []string{
 			"-i", source,
+			"-vframes", "1",
 			"-vf", fmt.Sprintf("scale=%d:%d", w, h),
 			"-f", "image2pipe",
 			"-vcodec", "png",
