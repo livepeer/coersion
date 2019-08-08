@@ -60,6 +60,13 @@
                         "description": "Desired height of the extracted image",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "o",
+                        "in": "query",
+                        "description": "Offset (in seconds) from the start of the video from which image shall be extracted",
+                        "required": false,
+                        "type": "string"
                     }
                 ],
                 "responses": {

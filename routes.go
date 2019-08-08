@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -49,6 +50,7 @@ func routes(ctx context.Context, e *echo.Echo) {
 		source := c.QueryParam("s")
 		height := c.QueryParam("h")
 		width := c.QueryParam("w")
+		offset := c.QueryParam("o")
 
 		h, err := strconv.ParseUint(height, 10, 16)
 		if err != nil {
@@ -58,8 +60,13 @@ func routes(ctx context.Context, e *echo.Echo) {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, fmt.Sprintf("error parsing width param: %s", err.Error()))
 		}
+		o, err := strconv.ParseUint(offset, 10, 16)
+		if err != nil {
+			// dont error - this arg is optional
+			// return c.JSON(http.StatusBadRequest, fmt.Sprintf("error parsing offset param: %s", err.Error()))
+		}
 
-		task := NewScaleImageTask(source, uint(w), uint(h))
+		task := NewScaleImageTask(source, uint(w), uint(h), time.Duration(o)*time.Second)
 
 		// if err := task.Run(); err != nil {
 		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
