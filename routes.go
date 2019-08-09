@@ -79,4 +79,39 @@ func routes(ctx context.Context, e *echo.Echo) {
 
 		return c.Blob(http.StatusOK, "image/png", results)
 	})
+
+	e.GET("/bitmap", func(c echo.Context) error {
+
+		source := c.QueryParam("s")
+		height := c.QueryParam("h")
+		width := c.QueryParam("w")
+		offset := c.QueryParam("o")
+
+		h, err := strconv.ParseUint(height, 10, 16)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, fmt.Sprintf("error parsing height param: %s", err.Error()))
+		}
+		w, err := strconv.ParseUint(width, 10, 16)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, fmt.Sprintf("error parsing width param: %s", err.Error()))
+		}
+		o, err := strconv.ParseUint(offset, 10, 16)
+		if err != nil {
+			// dont error - this arg is optional
+			// return c.JSON(http.StatusBadRequest, fmt.Sprintf("error parsing offset param: %s", err.Error()))
+		}
+
+		task := NewBitmapTask(source, uint(w), uint(h), time.Duration(o)*time.Second)
+
+		// if err := task.Run(); err != nil {
+		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
+		// }
+
+		results, err := task.Output()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
+		}
+
+		return c.Blob(http.StatusOK, "image/png", results)
+	})
 }

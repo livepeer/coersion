@@ -25,7 +25,7 @@
         }
     ],
     "schemes": [
-        "http",
+        "http"
     ],
     "paths": {
         "/scale": {
@@ -65,6 +65,65 @@
                         "name": "o",
                         "in": "query",
                         "description": "Offset (in seconds) from the start of the video from which image shall be extracted",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": "image/*",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request params"
+                    },
+                    "500": {
+                        "description": "Task error"
+                    }
+                }
+            }
+        },
+        "/bitmap": {
+            "get": {
+                "tags": [
+                    "ffmpeg"
+                ],
+                "summary": "extract still image bitmap and scale",
+                "description": "extract still image bitmap and scale",
+                "operationId": "extractScale",
+                "produces": [
+                    "image/bmp"
+                ],
+                "parameters": [
+                    {
+                        "name": "s",
+                        "in": "query",
+                        "description": "Source video file to extract a still image bitmap from",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "w",
+                        "in": "query",
+                        "description": "Desired width of the extracted image bitmap",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "h",
+                        "in": "query",
+                        "description": "Desired height of the extracted image bitmap",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "o",
+                        "in": "query",
+                        "description": "Offset (in seconds) from the start of the video from which image bitmap shall be extracted",
                         "required": false,
                         "type": "string"
                     }
