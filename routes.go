@@ -4,15 +4,30 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+const swaggerJSON = "swagger.json"
+
 func routes(ctx context.Context, e *echo.Echo) {
 	// Swagger OpenAPI spec
-	e.File("/swagger.json", "/swagger.json")
+	if fileExists(swaggerJSON) {
+		e.File("/swagger.json", swaggerJSON)
+	} else if fileExists("/" + swaggerJSON) {
+		e.File("/swagger.json", "/"+swaggerJSON)
+	}
 	// GET endpoint
 	e.GET("/", func(c echo.Context) error {
 		// cache this one
