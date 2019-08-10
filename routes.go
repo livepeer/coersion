@@ -159,16 +159,16 @@ func routes(ctx context.Context, e *echo.Echo) {
 
 		task := NewScaleImageTask(source, uint(w), uint(h), time.Duration(o)*time.Second)
 
-		// if err := task.Run(); err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		// }
-
-		results, err := task.Output()
+		results, err := task.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
 		}
 
-		pixels, err := getPixels(bytes.NewReader(results))
+		if err := task.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
+		}
+
+		pixels, err := getPixels(results)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel parsing failed: %s", err.Error()))
 		}
