@@ -10,12 +10,18 @@ docker-compose up
 
 ...then navigate to http://localhost:8080
 
-This, right now, is only a demonstration of the demonstration itself.  As such, it currently only has the ability to extract a still image and scale it.
+To try out the feature, use the `match2` of `match3` endpoints and provide the arguments:
 
-To try out this feature, use the `scale` endpoint and provide three arguments:
-
-s - a link to a video source
+s0 - a link to a video source
+s1 - a link to a video source
+s2 - a link to a video source
 w - a desired width dimension for resizing
 h - a desired height dimension for resizing
+o - an optional offset from the start of the video in seconds
+v - an allowed variance value for use in matching.  The smaller the value, the more strict the pixels much match.
 
-This repository will be updated as the POC progresses...
+I recommend to use samples such as those listed at https://file-examples.com/index.php/sample-video-files/sample-mp4-files/
+
+Choose a resolution such as 360x240.
+
+Use a different rendition for each source, and start with a variance of 1.  You'll notice that they don't match up perfectly.  Increase the variance to 2.  Then 5.  Then 10...
