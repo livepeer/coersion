@@ -277,6 +277,86 @@
                     }
                 }
             }
+        },
+        "/match3": {
+            "get": {
+                "tags": [
+                    "ffmpeg"
+                ],
+                "summary": "determine mismatch based on fuzzed RGBA values",
+                "description": "determine mismatch based on fuzzed RGBA values",
+                "operationId": "pixelmatch3",
+                "produces": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "s0",
+                        "in": "query",
+                        "description": "Source video file to extract a still image from",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "s1",
+                        "in": "query",
+                        "description": "Source video file to extract a still image from",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "s2",
+                        "in": "query",
+                        "description": "Source video file to extract a still image from",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "w",
+                        "in": "query",
+                        "description": "Desired width of the extracted image bitmap",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "h",
+                        "in": "query",
+                        "description": "Desired height of the extracted image bitmap",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "o",
+                        "in": "query",
+                        "description": "Offset (in seconds) from the start of the video from which image bitmap shall be extracted",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "v",
+                        "in": "query",
+                        "description": "RGBA offset variation fuzz allowed to remain a match",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": "text/plain",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request params"
+                    },
+                    "500": {
+                        "description": "Task error"
+                    }
+                }
+            }
         }
     },
     "externalDocs": {
