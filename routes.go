@@ -21,6 +21,24 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
+func imageMatch(wg *sync.WaitGroup, pixelsA, pixelsB [][]Pixel, v uint64, pass, fail *int) {
+	defer wg.Done()
+	*pass = 0
+	*fail = 0
+	for x, a := range pixelsA {
+		for y, b := range a {
+			if math.Abs(float64(b.R-pixelsB[x][y].R)) < float64(v) &&
+				math.Abs(float64(b.G-pixelsB[x][y].G)) < float64(v) &&
+				math.Abs(float64(b.B-pixelsB[x][y].B)) < float64(v) &&
+				math.Abs(float64(b.A-pixelsB[x][y].A)) < float64(v) {
+				*pass++
+			} else {
+				*fail++
+			}
+		}
+	}
+}
+
 const swaggerJSON = "swagger.json"
 
 func routes(ctx context.Context, e *echo.Echo) {
@@ -248,19 +266,11 @@ func routes(ctx context.Context, e *echo.Echo) {
 
 		pass := 0
 		fail := 0
-		for x, a := range pixels0 {
-			for y, b := range a {
-				if math.Abs(float64(b.R-pixels1[x][y].R)) < float64(v) &&
-					math.Abs(float64(b.G-pixels1[x][y].G)) < float64(v) &&
-					math.Abs(float64(b.B-pixels1[x][y].B)) < float64(v) &&
-					math.Abs(float64(b.A-pixels1[x][y].A)) < float64(v) {
-					pass = pass + 1
-				} else {
-					fail = fail + 1
-				}
-			}
-		}
-
+		// we don't need a waitgroup here, but we want to use a common function, so just pass one in anyway
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go imageMatch(&wg, pixels0, pixels1, v, &pass, &fail)
+		wg.Wait()
 		blob := fmt.Sprintf("%v%% match", 100*float64(pass)/float64(pass+fail))
 
 		return c.Blob(http.StatusOK, "text/plain", []byte(blob))
@@ -345,58 +355,17 @@ func routes(ctx context.Context, e *echo.Echo) {
 		var wg sync.WaitGroup
 		wg.Add(3)
 
-		go func() {
-			defer wg.Done()
-			for x, a := range pixels0 {
-				for y, b := range a {
-					if math.Abs(float64(b.R-pixels1[x][y].R)) < float64(v) &&
-						math.Abs(float64(b.G-pixels1[x][y].G)) < float64(v) &&
-						math.Abs(float64(b.B-pixels1[x][y].B)) < float64(v) &&
-						math.Abs(float64(b.A-pixels1[x][y].A)) < float64(v) {
-						pass0 = pass0 + 1
-					} else {
-						fail0 = fail0 + 1
-					}
-				}
-			}
-		}()
+		go imageMatch(&wg, pixels0, pixels1, v, &pass0, &fail0)
 
+		// this is a blocking call, so start the above async job before this one.
 		pixels2, err := getPixels(img2)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel parsing for task2 failed: %s", err.Error()))
 		}
 
-		go func() {
-			defer wg.Done()
-			for x, a := range pixels1 {
-				for y, b := range a {
-					if math.Abs(float64(b.R-pixels2[x][y].R)) < float64(v) &&
-						math.Abs(float64(b.G-pixels2[x][y].G)) < float64(v) &&
-						math.Abs(float64(b.B-pixels2[x][y].B)) < float64(v) &&
-						math.Abs(float64(b.A-pixels2[x][y].A)) < float64(v) {
-						pass1 = pass1 + 1
-					} else {
-						fail1 = fail1 + 1
-					}
-				}
-			}
-		}()
-
-		go func() {
-			defer wg.Done()
-			for x, a := range pixels2 {
-				for y, b := range a {
-					if math.Abs(float64(b.R-pixels0[x][y].R)) < float64(v) &&
-						math.Abs(float64(b.G-pixels0[x][y].G)) < float64(v) &&
-						math.Abs(float64(b.B-pixels0[x][y].B)) < float64(v) &&
-						math.Abs(float64(b.A-pixels0[x][y].A)) < float64(v) {
-						pass2 = pass2 + 1
-					} else {
-						fail2 = fail2 + 1
-					}
-				}
-			}
-		}()
+		// these next two depend on pixels2, above
+		go imageMatch(&wg, pixels1, pixels2, v, &pass1, &fail1)
+		go imageMatch(&wg, pixels2, pixels0, v, &pass2, &fail2)
 
 		wg.Wait()
 		blob0 := fmt.Sprintf("s0 & s1: %v%% match\n", 100*float64(pass0)/float64(pass0+fail0))
