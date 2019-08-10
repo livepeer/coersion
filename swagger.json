@@ -64,7 +64,7 @@
                     {
                         "name": "o",
                         "in": "query",
-                        "description": "Offset (in seconds) from the start of the video from which image shall be extracted",
+                        "description": "Offset (in seconds) from the start of the video from which the image shall be extracted",
                         "required": false,
                         "type": "string"
                     }
@@ -94,7 +94,7 @@
                 ],
                 "summary": "extract still image bitmap and scale",
                 "description": "extract still image bitmap and scale",
-                "operationId": "extractScale",
+                "operationId": "extractScaleBMP",
                 "produces": [
                     "image/bmp"
                 ],
@@ -123,7 +123,7 @@
                     {
                         "name": "o",
                         "in": "query",
-                        "description": "Offset (in seconds) from the start of the video from which image bitmap shall be extracted",
+                        "description": "Offset (in seconds) from the start of the video from which the image bitmap shall be extracted",
                         "required": false,
                         "type": "string"
                     }
@@ -151,9 +151,9 @@
                 "tags": [
                     "ffmpeg"
                 ],
-                "summary": "extract still image bitmap and scale",
-                "description": "extract still image bitmap and scale",
-                "operationId": "extractScale",
+                "summary": "extract scaled still image RGBA Values",
+                "description": "extract scaled still image RGBA Values",
+                "operationId": "pixels",
                 "produces": [
                     "text/plain"
                 ],
@@ -161,28 +161,28 @@
                     {
                         "name": "s",
                         "in": "query",
-                        "description": "Source video file to extract a still image bitmap from",
+                        "description": "Source video file to extract scaled still image RGBA Values from",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "w",
                         "in": "query",
-                        "description": "Desired width of the extracted image bitmap",
+                        "description": "Desired width of the extracted image",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "h",
                         "in": "query",
-                        "description": "Desired height of the extracted image bitmap",
+                        "description": "Desired height of the extracted image",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "o",
                         "in": "query",
-                        "description": "Offset (in seconds) from the start of the video from which image bitmap shall be extracted",
+                        "description": "Offset (in seconds) from the start of the video from which the extracted RGBA values shall be extracted",
                         "required": false,
                         "type": "string"
                     }
