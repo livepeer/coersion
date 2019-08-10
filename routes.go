@@ -318,7 +318,7 @@ func routes(ctx context.Context, e *echo.Echo) {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task1 output failed: %s", err.Error()))
 		}
 
-		img2, err := task1.StdoutPipe()
+		img2, err := task2.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task2 output failed: %s", err.Error()))
 		}
