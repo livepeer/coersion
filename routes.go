@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"math"
@@ -298,46 +297,46 @@ func routes(ctx context.Context, e *echo.Echo) {
 		task1 := NewScaleImageTask(source1, uint(w), uint(h), time.Duration(o)*time.Second)
 		task2 := NewScaleImageTask(source2, uint(w), uint(h), time.Duration(o)*time.Second)
 
-		if err := task0.Start(); err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task0 failed: %s", err.Error()))
-		}
-
-		if err := task1.Start(); err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task1 failed: %s", err.Error()))
-		}
-
-		if err := task2.Start(); err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task2 failed: %s", err.Error()))
-		}
-
-		img0, err := task0.Output()
+		img0, err := task0.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task0 output failed: %s", err.Error()))
 		}
 
-		img1, err := task1.Output()
+		img1, err := task1.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task1 output failed: %s", err.Error()))
 		}
 
-		img2, err := task2.Output()
+		img2, err := task1.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task2 output failed: %s", err.Error()))
 		}
 
-		pixels0, err := getPixels(bytes.NewReader(img0))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel0 parsing failed: %s", err.Error()))
+		if err := task0.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task0 failed: %s", err.Error()))
 		}
 
-		pixels1, err := getPixels(bytes.NewReader(img1))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel1 parsing failed: %s", err.Error()))
+		if err := task1.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task1 failed: %s", err.Error()))
 		}
 
-		pixels2, err := getPixels(bytes.NewReader(img2))
+		if err := task2.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task2 failed: %s", err.Error()))
+		}
+
+		pixels0, err := getPixels(img0)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel2 parsing failed: %s", err.Error()))
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel parsing for task0 failed: %s", err.Error()))
+		}
+
+		pixels1, err := getPixels(img1)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel parsing for task1 failed: %s", err.Error()))
+		}
+
+		pixels2, err := getPixels(img2)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("pixel parsing for task2 failed: %s", err.Error()))
 		}
 
 		pass0 := 0
