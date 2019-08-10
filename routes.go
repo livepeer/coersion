@@ -49,17 +49,21 @@ func routes(ctx context.Context, e *echo.Echo) {
 		// if err := task.Run(); err != nil {
 		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
 		// }
-		stream, err := task.StderrPipe()
+		// stream, err := task.StderrPipe()
+		// if err != nil {
+		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed, error pipe failed: %s", err.Error()))
+		// }
+
+		results, err := task.StdoutPipe()
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed, error pipe failed: %s", err.Error()))
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
 		}
 
-		results, err := task.Output()
-		if err != nil {
-			return c.Stream(http.StatusInternalServerError, "text/plain", stream)
+		if err := task.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
 		}
 
-		return c.Blob(http.StatusOK, "image/png", results)
+		return c.Stream(http.StatusOK, "image/png", results)
 	})
 
 	e.GET("/scale", func(c echo.Context) error {
@@ -85,16 +89,16 @@ func routes(ctx context.Context, e *echo.Echo) {
 
 		task := NewScaleImageTask(source, uint(w), uint(h), time.Duration(o)*time.Second)
 
-		// if err := task.Run(); err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		// }
-
-		results, err := task.Output()
+		results, err := task.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
 		}
 
-		return c.Blob(http.StatusOK, "image/png", results)
+		if err := task.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
+		}
+
+		return c.Stream(http.StatusOK, "image/png", results)
 	})
 
 	e.GET("/bitmap", func(c echo.Context) error {
@@ -120,16 +124,16 @@ func routes(ctx context.Context, e *echo.Echo) {
 
 		task := NewBitmapTask(source, uint(w), uint(h), time.Duration(o)*time.Second)
 
-		// if err := task.Run(); err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		// }
-
-		results, err := task.Output()
+		results, err := task.StdoutPipe()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
 		}
 
-		return c.Blob(http.StatusOK, "image/png", results)
+		if err := task.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
+		}
+
+		return c.Stream(http.StatusOK, "image/bmp", results)
 	})
 
 	e.GET("/pixels", func(c echo.Context) error {
@@ -290,9 +294,17 @@ func routes(ctx context.Context, e *echo.Echo) {
 		task1 := NewScaleImageTask(source1, uint(w), uint(h), time.Duration(o)*time.Second)
 		task2 := NewScaleImageTask(source2, uint(w), uint(h), time.Duration(o)*time.Second)
 
-		// if err := task.Run(); err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		// }
+		if err := task0.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task0 failed: %s", err.Error()))
+		}
+
+		if err := task1.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task1 failed: %s", err.Error()))
+		}
+
+		if err := task2.Start(); err != nil {
+			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("start task2 failed: %s", err.Error()))
+		}
 
 		img0, err := task0.Output()
 		if err != nil {

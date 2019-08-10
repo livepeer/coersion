@@ -67,6 +67,11 @@ func (j *ExtractImageTask) StderrPipe() (io.ReadCloser, error) {
 	return j.cmd.StderrPipe()
 }
 
+// StdoutPipe returns the task's StdoutPipe
+func (j *ExtractImageTask) StdoutPipe() (io.ReadCloser, error) {
+	return j.cmd.StdoutPipe()
+}
+
 // Promise runs the task asynchronously and returns a channel
 // that will emit the image extraction task's status when it completes
 func (j *ExtractImageTask) Promise() chan error {

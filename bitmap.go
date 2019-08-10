@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os/exec"
 	"time"
 )
@@ -57,6 +58,11 @@ func (j *BitmapTask) Run() error {
 // Output returns the task's output
 func (j *BitmapTask) Output() ([]byte, error) {
 	return j.cmd.Output()
+}
+
+// StdoutPipe returns the task's StdoutPipe
+func (j *BitmapTask) StdoutPipe() (io.ReadCloser, error) {
+	return j.cmd.StdoutPipe()
 }
 
 // Promise runs the task asynchronously and returns a channel
