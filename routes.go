@@ -44,18 +44,14 @@ const swaggerJSON = "swagger.json"
 func routes(ctx context.Context, e *echo.Echo) {
 	// Swagger OpenAPI spec
 	if fileExists(swaggerJSON) {
-		e.File("/swagger.json", swaggerJSON)
+		e.File("/"+swaggerJSON, swaggerJSON)
 	} else if fileExists("/" + swaggerJSON) {
-		e.File("/swagger.json", "/"+swaggerJSON)
+		e.File("/"+swaggerJSON, "/"+swaggerJSON)
 	}
-	// GET endpoint
-	e.GET("/", func(c echo.Context) error {
-		// cache this one
-		helloworld := "hello world"
-		c.Response().Header().Set("Cache-Control", "max-age=3600") // 1 hour
-		c.Response().Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-		return c.JSON(http.StatusOK, helloworld)
+	e.GET("/", func(c echo.Context) error {
+
+		return c.Redirect(http.StatusMovedPermanently, "/swagger.json")
 	})
 
 	e.GET("/scale", func(c echo.Context) error {
