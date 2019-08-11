@@ -58,32 +58,6 @@ func routes(ctx context.Context, e *echo.Echo) {
 		return c.JSON(http.StatusOK, helloworld)
 	})
 
-	e.GET("/still", func(c echo.Context) error {
-
-		source := c.QueryParam("s")
-
-		task := NewExtractImageTask(source)
-
-		// if err := task.Run(); err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		// }
-		// stream, err := task.StderrPipe()
-		// if err != nil {
-		// 	return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed, error pipe failed: %s", err.Error()))
-		// }
-
-		results, err := StdoutPipe(task)
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task output failed: %s", err.Error()))
-		}
-
-		if err := Start(task); err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Sprintf("task failed: %s", err.Error()))
-		}
-
-		return c.Stream(http.StatusOK, "image/png", results)
-	})
-
 	e.GET("/scale", func(c echo.Context) error {
 
 		source := c.QueryParam("s")
