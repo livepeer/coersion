@@ -47,36 +47,7 @@ func (j *BitmapTask) Start() error {
 	return j.cmd.Start()
 }
 
-// Run begins the task (via Start()) and waits for completion
-func (j *BitmapTask) Run() error {
-	if err := j.Start(); err != nil {
-		return err
-	}
-	return j.cmd.Wait()
-}
-
-// Output returns the task's output
-func (j *BitmapTask) Output() ([]byte, error) {
-	return j.cmd.Output()
-}
-
 // StdoutPipe returns the task's StdoutPipe
 func (j *BitmapTask) StdoutPipe() (io.ReadCloser, error) {
 	return j.cmd.StdoutPipe()
-}
-
-// Promise runs the task asynchronously and returns a channel
-// that will emit the image scaling task's status when it completes
-func (j *BitmapTask) Promise() chan error {
-	ch := make(chan error)
-	go func() {
-		if err := j.Start(); err != nil {
-			ch <- err
-		}
-		if err := j.cmd.Wait(); err != nil {
-			ch <- err
-		}
-		ch <- nil
-	}()
-	return ch
 }

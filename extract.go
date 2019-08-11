@@ -49,19 +49,6 @@ func (j *ExtractImageTask) Start() error {
 	return j.cmd.Start()
 }
 
-// Run begins the task (via Start()) and waits for completion
-func (j *ExtractImageTask) Run() error {
-	if err := j.Start(); err != nil {
-		return err
-	}
-	return j.cmd.Wait()
-}
-
-// Output returns the task's output
-func (j *ExtractImageTask) Output() ([]byte, error) {
-	return j.cmd.Output()
-}
-
 // StderrPipe returns the task's StderrPipe
 func (j *ExtractImageTask) StderrPipe() (io.ReadCloser, error) {
 	return j.cmd.StderrPipe()
@@ -70,20 +57,4 @@ func (j *ExtractImageTask) StderrPipe() (io.ReadCloser, error) {
 // StdoutPipe returns the task's StdoutPipe
 func (j *ExtractImageTask) StdoutPipe() (io.ReadCloser, error) {
 	return j.cmd.StdoutPipe()
-}
-
-// Promise runs the task asynchronously and returns a channel
-// that will emit the image extraction task's status when it completes
-func (j *ExtractImageTask) Promise() chan error {
-	ch := make(chan error)
-	go func() {
-		if err := j.Start(); err != nil {
-			ch <- err
-		}
-		if err := j.cmd.Wait(); err != nil {
-			ch <- err
-		}
-		ch <- nil
-	}()
-	return ch
 }
