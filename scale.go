@@ -24,17 +24,9 @@ func fmtDuration(d time.Duration) string {
 
 // NewScaleImageTask creates a new image Scaleion task
 func NewScaleImageTask(source string, w, h uint, o time.Duration) *ScaleImageTask {
-	// TO FILE:
-	// return &ScaleImageTask{
-	// 	source: source,
-	// 	dest:   dest,
-	// 	cmd: exec.Command(ffmpegCmd, []string{
-	// 		"-i", source,
-	// 		"-vf", fmt.Sprintf("scale=%d:%d", w, h),
-	// 		fmt.Sprintf("%s.jpg", dest),
-	// 	}...),
-	// }
+
 	offset := fmtDuration(o)
+
 	return &ScaleImageTask{
 		source: source,
 		cmd: exec.Command(ffmpegCmd, []string{

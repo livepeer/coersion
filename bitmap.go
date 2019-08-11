@@ -14,17 +14,9 @@ type BitmapTask struct {
 
 // NewBitmapTask creates a new image Scaleion task
 func NewBitmapTask(source string, w, h uint, o time.Duration) *BitmapTask {
-	// TO FILE:
-	// return &BitmapTask{
-	// 	source: source,
-	// 	dest:   dest,
-	// 	cmd: exec.Command(ffmpegCmd, []string{
-	// 		"-i", source,
-	// 		"-vf", fmt.Sprintf("scale=%d:%d", w, h),
-	// 		fmt.Sprintf("%s.jpg", dest),
-	// 	}...),
-	// }
+
 	offset := fmtDuration(o)
+
 	return &BitmapTask{
 		source: source,
 		cmd: exec.Command(ffmpegCmd, []string{

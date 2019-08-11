@@ -8,7 +8,7 @@ import (
 const ffmpegCmd = "ffmpeg"
 
 type ffmpegTask interface {
-	//get the internal exec.cmd
+	// getCmd gets the internal exec.cmd
 	getCmd() *exec.Cmd
 }
 

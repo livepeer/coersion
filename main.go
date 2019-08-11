@@ -28,23 +28,14 @@ func main() {
 	}
 
 	ctx := context.Background()
-	// set up the service first
-	// XXX
 
-	// Echo instance
 	e := echo.New()
 
-	//e.Use(middleware.LoggerWithConfig(middleware.DefaultLoggerConfig))
-	// 	Format: "remote_ip=${remote_ip}, user_agent=${user_agent}, method=${method}, uri=${uri}, status=${status}\n"}))
-
-	//CORS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowMethods: []string{echo.GET}, //{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE},
+		AllowMethods: []string{echo.GET},
 	}))
 
-	// Routes
-	/**/
 	routes(ctx, e)
 
 	s := &http.Server{
