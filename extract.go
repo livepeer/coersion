@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"os/exec"
 )
 
@@ -49,12 +48,6 @@ func (j *ExtractImageTask) Start() error {
 	return j.cmd.Start()
 }
 
-// StderrPipe returns the task's StderrPipe
-func (j *ExtractImageTask) StderrPipe() (io.ReadCloser, error) {
-	return j.cmd.StderrPipe()
-}
-
-// StdoutPipe returns the task's StdoutPipe
-func (j *ExtractImageTask) StdoutPipe() (io.ReadCloser, error) {
-	return j.cmd.StdoutPipe()
+func (j *ExtractImageTask) getCmd() *exec.Cmd {
+	return j.cmd
 }

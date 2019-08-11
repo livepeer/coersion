@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os/exec"
 	"time"
 )
@@ -52,11 +51,6 @@ func NewScaleImageTask(source string, w, h uint, o time.Duration) *ScaleImageTas
 }
 
 // Start begins the task
-func (j *ScaleImageTask) Start() error {
-	return j.cmd.Start()
-}
-
-// StdoutPipe returns the task's StdoutPipe
-func (j *ScaleImageTask) StdoutPipe() (io.ReadCloser, error) {
-	return j.cmd.StdoutPipe()
+func (j *ScaleImageTask) getCmd() *exec.Cmd {
+	return j.cmd
 }

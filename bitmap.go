@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os/exec"
 	"time"
 )
@@ -42,12 +41,6 @@ func NewBitmapTask(source string, w, h uint, o time.Duration) *BitmapTask {
 	}
 }
 
-// Start begins the task
-func (j *BitmapTask) Start() error {
-	return j.cmd.Start()
-}
-
-// StdoutPipe returns the task's StdoutPipe
-func (j *BitmapTask) StdoutPipe() (io.ReadCloser, error) {
-	return j.cmd.StdoutPipe()
+func (j *BitmapTask) getCmd() *exec.Cmd {
+	return j.cmd
 }
